@@ -1,5 +1,11 @@
 let Controller = function() {
 
+  $('#newTask').keypress((e) => {
+    if (e.which == 13) {
+      this.addTarefa();
+    }
+  });
+
   this.loadTasks = () => {
     $.get("/tasks", (res) => {
       this.updateTaskList(res);
@@ -9,8 +15,15 @@ let Controller = function() {
   this.updateTaskList = (tasks) => {
     $('#taskList').html('');
     tasks.forEach(task => {
-      $('#taskList').append('<li class="list-group-item">' + task.text + '</li>');
+      let button = `<button class="btn btn-info" type="button" onclick="controller.apagaTarefa(${task.id})"><span class="glyphicon glyphicon-check"></span></button>`;
+      $('#taskList').append(`<li class="list-group-item task">${button} <div class="body">${task.text}</div></li>`);
     })
+  }
+
+  this.apagaTarefa = (taskId) => {
+    $.get(`/tasks/${taskId}/delete`, (res) => {
+      this.updateTaskList(res);
+    });
   }
 
   this.addTarefa = () => {

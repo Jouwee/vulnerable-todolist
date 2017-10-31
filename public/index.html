@@ -9,6 +9,16 @@
     <!-- Bootstrap -->
     <link href="bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 
+    <style>
+      .task {
+        display: flex;
+      }
+      .task .body {
+        margin-left: 10px;
+        display: flex;
+      }
+    </style>
+
   </head>
   <body>
     <nav class="navbar navbar-default">
@@ -26,7 +36,7 @@
           <div class="input-group">
             <input id="newTask" type="text" class="form-control" placeholder="Digite uma nova tarefa">
             <span class="input-group-btn">
-              <button class="btn btn-success" type="button" onclick="controller.addTarefa()">+</button>
+              <button class="btn btn-success" type="button" onclick="controller.addTarefa()"><span class="glyphicon glyphicon-plus"></span></button>
             </span>
           </div>
           <br>
