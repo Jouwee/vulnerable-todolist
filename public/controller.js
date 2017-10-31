@@ -14,15 +14,20 @@ let Controller = function() {
   }
 
   this.addTarefa = () => {
+    let valueInput = document.querySelector('#newTask');
+    let value = valueInput.value;
+    if (value.trim().length == 0) {
+      return;
+    }
     $.ajax({
       type: "POST",
       url: '/tasks',
-      data: {text: 'nova tarefa'},
+      data: {text: value},
       success: res => {
-        this.loadTasks();
+        this.updateTaskList(res);
+        valueInput.value = "";
       },
-      dataType: 'text'
-    });
+    })
   }
 
 }
