@@ -1,7 +1,11 @@
 var express = require('express'),
   app = express(),
   port = process.env.PORT || 3000;
-var showdown  = require('showdown');
+var marked = require('marked');
+
+marked.setOptions({
+  sanitize: true
+});
 
 app.listen(port);
 
@@ -26,9 +30,10 @@ let pushTask = (task) => {
 
 let getTasks = () => {
   return inMemoryTasks.map((task) => {
-    converter = new showdown.converter(),
-    task.text = converter.makeHtml(task.text);
-    return task;
+    return {
+      id: task.id,
+      text: marked(task.text)
+    }
   })
 }
 
