@@ -16,7 +16,11 @@ let Controller = function() {
     $('#taskList').html('');
     tasks.forEach(task => {
       let button = `<button class="btn btn-info" type="button" onclick="controller.apagaTarefa(${task.id})"><span class="glyphicon glyphicon-check"></span></button>`;
-      $('#taskList').append(`<li class="list-group-item task">${button} <div class="body">${task.text}</div></li>`);
+      let lembrete = '';
+      if (task.reminder != undefined) {
+        lembrete = '<small class="note">Com lembrete</small>';
+      }
+      $('#taskList').append(`<li class="list-group-item task">${button} <div class="body">${task.text}</div>${lembrete}</li>`);
     })
   }
 

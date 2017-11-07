@@ -2,6 +2,9 @@ var express = require('express'),
   app = express(),
   port = process.env.PORT || 3000;
 var marked = require('marked');
+var ms = require('ms');
+var hms = require('humanize-ms');
+var st = require('st');
 
 marked.setOptions({
   sanitize: true
@@ -17,14 +20,35 @@ app.configure(function(){
 
 console.log('todo list RESTful API server started on: ' + port);
 
-app.use('/', express.static('public'));
-app.use('/', express.static('node_modules'));
+app.use('/', express.static('page'));
+//app.use('/', express.static('node_modules'));
+app.use(st({path: './public', url: '/public'}));
+app.use(st({path: './node_modules', url: '/modules'}));
+//app.use(st({path: './page', url: '/'}));
 
 let inMemoryTasks = [];
 let nextTaskId = 0;
 
 let pushTask = (task) => {
   task.id = nextTaskId++;
+
+  var remindToken = ' in ';
+  let text = task.text;
+  var reminder = text.toString().indexOf(remindToken);
+  if (reminder > 0) {
+    var time = text.slice(reminder + remindToken.length);
+    time = time.replace(/\n$/, '');
+
+    var period = hms(time);
+
+    // remove it
+    text = text.slice(0, reminder);
+    if (typeof period != 'undefined') {
+      task.reminder = ms(period);
+    }
+    task.text = text;
+  }
+
   inMemoryTasks.push(task);
 }
 
@@ -32,7 +56,8 @@ let getTasks = () => {
   return inMemoryTasks.map((task) => {
     return {
       id: task.id,
-      text: marked(task.text)
+      text: marked(task.text),
+      reminder: task.reminder
     }
   })
 }
